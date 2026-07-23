@@ -1,0 +1,22 @@
+BootStrap: docker
+# Certifique-se da versao do cuda aceita pela maquina de interesse e a versao compativel com as ferramentas que ira utilizar
+From : nvidia / cuda :12.6 - cudnn - devel - ubuntu22 .04
+%post
+    export DEBIAN_FRONTEND=noninteractive
+    apt-get update && apt-get upgrade -y
+    apt-get install -y \
+        build-essential \
+        gcc \
+        g++ \
+        zlib1g-dev \
+        libfftw3-dev \
+        Python3 \
+        Python3-pip \
+        Python3-dev
+
+    pip3 install --no-cache-dir numpy pandas matplotlib
+
+    pip3 install torch torchvision --index-url https://download.pytorch.org/whl/cu126
+
+%runscript
+    exec Python3 "$@"
