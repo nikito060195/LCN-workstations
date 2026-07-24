@@ -10,14 +10,15 @@
 cd "$SLURM_SUBMIT_DIR"
 echo "Iniciando simulacoes paralelas (Puro MPI: 8 processos por sistema)..."
 
-# --- SIMULACAO A (8 tarefas MPI x 1 thread = 8 núcleos isolados) ---
-srun --exclusive -N1 -n8 --cpus-per-task=1 \
-apptainer exec /home/nome_usuario/meus_ambientes/lammps_cpu.sif \
-lmp -in in.sistemaA > log_simulacaoA.txt 2>&1 &
+# --- SIMULACAO A (8 processos MPI puros) ---
+apptainer exec /home/nome_de_usuario/meus_ambientes/lammps_cpu.sif \
+mpirun --bind-to none -np 8 lmp -in in.sistemaA > log_simulacaoA.txt 2>&1 &
 
-# --- SIMULACAO B (8 tarefas MPI x 1 thread = 8 núcleos isolados) ---
-srun --exclusive -N1 -n8 --cpus-per-task=1 \
-apptainer exec /home/nome_usuario/meus_ambientes/lammps_cpu.sif \
-lmp -in in.sistemaB > log_simulacaoB.txt 2>&1 &
+# --- SIMULACAO B (8 processos MPI puros) ---
+apptainer exec /home/nome_de_usuario/meus_ambientes/lammps_cpu.sif \
+mpirun --bind-to none -np 8 lmp -in in.sistemaB > log_simulacaoB.txt 2>&1 &
 
+# Impede que o script feche antes das simulacoes terminarem
 wait
+
+echo "Simulacoes do LAMMPS concluidas com sucesso!"
