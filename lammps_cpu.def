@@ -4,10 +4,10 @@ From: ubuntu:22.04
 %environment
     export LC_ALL=C
     export DEBIAN_FRONTEND=noninteractive
-    export PythonUNBUFFERED=1
+    export PYTHONUNBUFFERED=1
     # Define o OpenMP para usar threads disponiveis (ajuste conforme necessario)
     export OMP_NUM_THREADS=1 
-
+    export LD_LIBRARY_PATH="/usr/local/lib:/usr/local/lib64:$LD_LIBRARY_PATH"
 %post
     export DEBIAN_FRONTEND=noninteractive
 
@@ -22,6 +22,7 @@ From: ubuntu:22.04
         python3 \
         python3-pip \
         python3-dev \
+        python3.10-venv \
         openmpi-bin \
         libopenmpi-dev \
         libfftw3-dev
@@ -36,12 +37,13 @@ From: ubuntu:22.04
 
     # Configuracao do CMake focada exclusivamente em CPU de alta performance
     cmake ../cmake \
+	-DCMAKE_INSTALL_PREFIX=/usr/local \
         -DCMAKE_BUILD_TYPE=Release \
         -DBUILD_MPI=yes \
         -DBUILD_SHARED_LIBS=yes \
         -DCMAKE_CXX_STANDARD=17 \
         -DPKG_OPENMP=yes \
-        -DPKG_Python=yes \
+        -DPKG_PYTHON=yes \
         -DPKG_MANYBODY=yes \
         -DPKG_MOLECULE=yes \
         -DPKG_KSPACE=yes \
@@ -51,5 +53,6 @@ From: ubuntu:22.04
     make -j 2
     make install
     make install-python
+    ldconfig
 
     echo "=== Ambiente LAMMPS CPU Compilado com Sucesso! ===" 
