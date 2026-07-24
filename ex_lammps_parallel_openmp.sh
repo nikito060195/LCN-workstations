@@ -14,11 +14,11 @@ echo "Iniciando simulacoes paralelas de LAMMPS (Apenas OpenMP)..."
 export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
 
 # --- SIMULACAO A (1 processo principal x 8 threads OpenMP = 8 núcleos) ---
-apptainer exec /home/lcn02/meus_ambientes/lammps_cpu.sif \
+apptainer exec /home/nome_de_usuario/meus_ambientes/lammps_cpu.sif \
 lmp -sf omp -pk omp $OMP_NUM_THREADS -in in.sistemaA > log_simulacaoA.txt 2>&1 &
 
 # --- SIMULACAO B (1 processo principal x 8 threads OpenMP = 8 núcleos) ---
-apptainer exec /home/lcn02/meus_ambientes/lammps_cpu.sif \
+apptainer exec /home/nome_de_usuario/meus_ambientes/lammps_cpu.sif \
 lmp -sf omp -pk omp $OMP_NUM_THREADS -in in.sistemaB > log_simulacaoB.txt 2>&1 &
 
 # Impede que o script feche antes das simulacoes terminarem
