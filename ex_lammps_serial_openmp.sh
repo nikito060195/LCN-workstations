@@ -10,11 +10,13 @@
 cd "$SLURM_SUBMIT_DIR"
 echo "Iniciando simulacoes sequenciais de LAMMPS (OpenMP Puro: 16 threads)..."
 
+# Exporta a variavel de ambiente para o limite correto de threads
+export OMP_NUM_THREADS=$SLURM_CPUS_PER_TASK
+
 # --- SIMULACAO A ---
 echo "Rodando simulacao A..."
-srun -n1 --cpus-per-task=16 \
-apptainer exec /home/nome_usuario/meus_ambientes/lammps_cpu.sif \
-lmp -sf omp -pk omp 16 -in in.sistemaA > log_simulacaoA.txt 2>&1
+apptainer exec /home/nome_de_usuario/meus_ambientes/lammps_cpu.sif \
+lmp -sf omp -pk omp $OMP_NUM_THREADS -in in.sistemaA > log_simulacaoA.txt 2>&1
 
 # Opcional, mas altamente recomendado
 echo "Pausa para resfriamento do SSD..."
@@ -22,8 +24,7 @@ sleep 120
 
 # --- SIMULACAO B ---
 echo "Rodando simulacao B..."
-srun -n1 --cpus-per-task=16 \
-apptainer exec /home/nome_usuario/meus_ambientes/lammps_cpu.sif \
-lmp -sf omp -pk omp 16 -in in.sistemaB > log_simulacaoB.txt 2>&1
+apptainer exec /home/nome_de_usuario/meus_ambientes/lammps_cpu.sif \
+lmp -sf omp -pk omp $OMP_NUM_THREADS -in in.sistemaB > log_simulacaoB.txt 2>&1
 
-echo "Todas as simulacoes do LAMMPS foram concluidas."
+echo "Todas as simulacoes do LAMMPS foram concluidas com sucesso!"
